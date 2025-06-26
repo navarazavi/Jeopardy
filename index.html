@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeopardy Game</title>
+  <style>
+    body {
+      background-color: #000066;
+      font-family: Arial, sans-serif;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    img.logo {
+      width: 300px;
+      margin-bottom: 20px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 5px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .cell {
+      background-color: #000099;
+      border: 2px solid #000066;
+      padding: 20px 10px;
+      font-size: 24px;
+      font-weight: bold;
+      color: gold;
+      cursor: pointer;
+    }
+
+    .cell:hover {
+      background-color: #0000cc;
+    }
+
+    .header {
+      background-color: #000066;
+      font-size: 18px;
+      color: white;
+    }
+
+    #modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .modal-content {
+      background-color: white;
+      color: black;
+      padding: 30px;
+      max-width: 600px;
+      border-radius: 10px;
+      text-align: left;
+    }
+
+    .close {
+      float: right;
+      font-size: 28px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <img src="jeopardy.png" alt="Jeopardy Logo" class="logo">
+  <div class="board" id="board"></div>
+
+  <div id="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <p id="question-text"></p>
+    </div>
+  </div>
+
+  <script>
+    const categories = [
+      "EDIBLE RHYME TIME",
+      "BOOKS IN GERMAN",
+      "3 'T's",
+      "CHOP CHOP!",
+      "THEY SAID IT WOULDN'T LAST",
+      "THEY WERE RIGHT"
+    ];
+
+    const values = ["200", "400", "600", "800", "1000"];
+
+    const questions = {};
+    for (let cat of categories) {
+      questions[cat] = {};
+      for (let val of values) {
+        questions[cat][val] = `${cat} Question for $${val}`;
+      }
+    }
+
+    const board = document.getElementById("board");
+
+    function buildBoard() {
+      for (let cat of categories) {
+        const header = document.createElement("div");
+        header.className = "cell header";
+        header.innerText = cat;
+        board.appendChild(header);
+      }
+
+      for (let val of values) {
+        for (let cat of categories) {
+          const cell = document.createElement("div");
+          cell.className = "cell";
+          cell.innerText = `$${val}`;
+          cell.onclick = () => {
+            document.getElementById("question-text").innerText = questions[cat][val];
+            document.getElementById("modal").style.display = "flex";
+            cell.style.visibility = "hidden";
+          };
+          board.appendChild(cell);
+        }
+      }
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+
+    buildBoard();
+  </script>
+</body>
+</html>
